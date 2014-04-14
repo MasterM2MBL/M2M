@@ -9,7 +9,7 @@ Ce projet réalisé dans le cadre de l’UE M2M nous a conduits à mettre en pla
 * 1 carte SD
 
 L’infrastructure implémentée est celle présenté ci-dessous :
-
+![alt tag](https://raw.githubusercontent.com/MasterM2MBL/M2M/master/images/image001.jpg)
 
 Un résumé des étapes importantes est accessible ici.
 
