@@ -35,10 +35,12 @@ Une fois la carte SD formatée, nous avons simplement décompressée la distribu
 À partir de maintenant, si la carte est insérée, la Galileo démarera sous clanton.
 
 
+
 #####Communication avec la carte sous Clanton :#####
 
 Alors que, dans un premier temps, nous pouvions communiquer avec la carte par USB, opération facilité par l'environnement de développement Arduino. Cette opération est devenue impossible avec l'OS clanton. Pour profiter de notre carte nous avons donc décidé d'utiliser ssh qui est fourni de base sur la distribution clanton. Pour cela, il fallait pouvoir donner une adresse à notre carte. Nous avons donc décidé d'installer un serveur dhcp sur notre machine de travail pour qu'il puisse donner une adresse ip à celle-ci. Suite à cela il est devenu possible de se connecter à la carte en ssh.
 Il est à noter que, hors des créneaux de TP, il était tout aussi simple de connecter la Galileo sur notre box qui se chargeait alors de lui donner une IP.
+
 
 
 #####Installation d'un client mosquitto sur Clanton :#####
@@ -46,10 +48,12 @@ Il est à noter que, hors des créneaux de TP, il était tout aussi simple de co
 À ce moment là, nous pouvions utiliser notre carte par ssh, mais nous voulions maintenant lui permettre d'emetre des publications mqtt. Pour cela nous avons décidé d'utiliser un publisher Mosquitto. Seulement, les distribution précompilés de mosquitto ne fonctionnaient pas tel quel sur Clanton. Nous avons donc voulu recompilé Mosquitto dirrectement sur notre Clanton, ce qui nous a également obligé à compiler/installer la bibliothèque necessaire (c-ares qui n'est pas fournie sur notre distribution Clanton).
 
 
+
 #####Une carte qui communique l'état de ses capteurs :#####
 
 Une fois Mosquitto fonctionnel sur notre Galileo, nous avons voulu l'utiliser pour envoyer l'état des capteurs de la carte. Cependant, maintenant que nous utilisions clanton, il n'était plus possible de pousser des sketchs à exécuter à l'aide de l'environnement de développement Arduino. Nous avons donc cherché un moyen d’exécuter des sketchs sur clanton.
 Ne trouvant pas, nous avons donc décidé de se passer des sketchs et lire directement les valeurs des capteurs (ou leurs en envoyer). Pour cela, nous nous somme aidé d'un tutoriel trouvé sur le site malinov.com . Vu que nous pouvions récupérer les valeurs des capteurs avec des commandes linux, nous avons créé un script shell qui va, régulièrement, lire la valeur du capteur et la publier par mosquitto.
+
 
 
 
@@ -67,6 +71,7 @@ Pour permettre à nos différentes briques de communiquer entre elles nous avons
 Une fois mosquitto installé on se contente de lancer le serveur avec la commande ''mosquitto''.
 
 
+
 #####Installation mongoDB :#####
 
 MongoDB nous servira à avoir une base de donnée pour enregistrer les informations sur les capteurs. Pour l'installer, nous avons simplement suivit les information données à cet endroit : http://docs.mongodb.org/manual/installation/ .
@@ -76,6 +81,7 @@ Nous avons ensuite édité le fichier /etc/init.d/mongodb pour ajouter l'argumen
 Nous avons ensuite lancé mongodb (mongo) et créé une base nommée M2M (use ''M2M'' ) puis une collection galileo (db.createCollection(''galileo'') ).
 
 
+
 #####Installation Node-Red :#####
 
 Node-Red est un outil visuel basé sur NodeJS. Nous allons l'utiliser pour permettre à MongoDB de récupérer les informations transitant sur Mosquitto. Pour installer Node-Red nous avons suivit les informations données sur le site officiel après avoir installé NodeJS puis nous avons installé les dépendances voulues (celles concernants mqtt par exemple) à l'aide de npm.
@@ -83,7 +89,9 @@ Node-Red est un outil visuel basé sur NodeJS. Nous allons l'utiliser pour perme
 Une fois Node-Red lancé, on peut y acceder en entrant l'adresse "http://localhost:1880/". Nous avons branchés 4 entrées mqtt (température, fumée, feu, présence) vers mongodb en supprimant les champs ''qos'' et ''retain'' (uniquement dans un soucis de lisibilité lorsque nous observions notre base) et ajouté un champ ''timestamp'' (en dehors du payload, toujours pour des raisons de lecture) afin que les données stockées soient réellement utilisables et que l'on puisse les classer dans le temps. 
 
 
-#####llation et configuration d'OpenHab#####
+
+
+#####Installation et configuration d'OpenHab#####
 
 L'étape suivante est d'installer et configurer OpenHab pour observer l'état de notre installation.
 Pour l'installation et la configuration nous nous somme aidé du site officiel d'openHab (http://www.openhab.org/). Nous avons commencé par récuperer le "runtime core" et les addons.
