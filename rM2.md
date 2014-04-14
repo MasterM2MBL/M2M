@@ -81,14 +81,14 @@ Ne trouvant pas, nous avons donc décidé de se passer des sketchs et lire direc
 Nous avons décidé d'utiliser une de nos machines personnelles tournant sous Linux comme serveur pour notre infrastructure. 
 
 #####Installation mosquitto : #####
-Pour permettre à nos différentes briques de communiquer entre elles nous avons décidé d'utiliser l'implémentions de MQTT Mosquitto. Il s'agissait ici d'installer le serveur Mosquitto. Pour cela nous avons suivi les informations données ici http://mosquitto.org/2013/01/mosquitto-debian-repository/ 
+Pour permettre à nos différentes briques de communiquer entre elles nous avons décidé d'utiliser l'implémentions de MQTT Mosquitto. Il s'agissait ici d'installer le serveur Mosquitto. Pour cela nous avons suivi les informations données ici [http://mosquitto.org/2013/01/mosquitto-debian-repository/](http://mosquitto.org/2013/01/mosquitto-debian-repository/)
 
 Une fois mosquitto installé on se contente de lancer le serveur avec la commande ''mosquitto''.
 
 
 
 #####Installation mongoDB :#####
-MongoDB nous servira à avoir une base de donnée pour enregistrer les informations sur les capteurs. Pour l'installer, nous avons simplement suivit les information données à cet endroit : http://docs.mongodb.org/manual/installation/ .
+MongoDB nous servira à avoir une base de donnée pour enregistrer les informations sur les capteurs. Pour l'installer, nous avons simplement suivit les information données à cet endroit : [http://docs.mongodb.org/manual/installation/](http://docs.mongodb.org/manual/installation/) .
 
 Nous avons ensuite édité le fichier /etc/init.d/mongodb pour ajouter l'argument  ''--rest'' cela nous permettra, notamment, de consulter le contenus de nos collection via une interface Web.
 
@@ -99,7 +99,7 @@ Nous avons ensuite lancé mongodb (mongo) et créé une base nommée M2M (use ''
 #####Installation Node-Red :#####
 Node-Red est un outil visuel basé sur NodeJS. Nous allons l'utiliser pour permettre à MongoDB de récupérer les informations transitant sur Mosquitto. Pour installer Node-Red nous avons suivi les informations données sur le site officiel après avoir installé NodeJS puis nous avons installé les dépendances voulues (celles concernant mqtt par exemple) à l'aide de npm.
 
-Une fois Node-Red lancé, on peut y acceder en entrant l'adresse "http://localhost:1880/". Nous avons branchés 4 entrées mqtt (temperature, fumee, feu, presence) vers mongodb en supprimant les champs ''qos'' et ''retain'' (uniquement dans un souci de lisibilité lorsque nous observions notre base) et ajouté un champ ''timestamp'' (en dehors du payload, toujours pour des raisons de lecture) afin que les données stockées soient réellement utilisables et que l'on puisse les classer dans le temps. 
+Une fois Node-Red lancé, on peut y acceder en entrant l'adresse "[http://localhost:1880/]". Nous avons branchés 4 entrées mqtt (temperature, fumee, feu, presence) vers mongodb en supprimant les champs ''qos'' et ''retain'' (uniquement dans un souci de lisibilité lorsque nous observions notre base) et ajouté un champ ''timestamp'' (en dehors du payload, toujours pour des raisons de lecture) afin que les données stockées soient réellement utilisables et que l'on puisse les classer dans le temps. 
 
 ![alt tag](https://raw.githubusercontent.com/MasterM2MBL/M2M/master/images/image002.png)
 
@@ -108,7 +108,7 @@ Une fois Node-Red lancé, on peut y acceder en entrant l'adresse "http://localho
 
 #####Installation et configuration d'openHab :#####
 L'étape suivante est d'installer et configurer OpenHab pour observer l'état de notre installation.
-Pour l'installation et la configuration nous nous somme aidé du site officiel d'openHab (http://www.openhab.org/). Nous avons commencé par récupérer le "runtime core" et les addons.
+Pour l'installation et la configuration nous nous somme aidé du site officiel d'openHab [http://www.openhab.org/](http://www.openhab.org/). Nous avons commencé par récupérer le "runtime core" et les addons.
 
 OpenHab doit nous permettre de 
 * récupérer et afficher la température
