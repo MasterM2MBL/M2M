@@ -33,6 +33,7 @@ Ce capteur et celui du groupe voisin du notre nous avaient tout de même donné 
 ###Sur la carte Galileo###
 
 #####Installation d'une distribution plus complète sur le Galileo :#####
+Note : Avant tout, il convient de mettre à jour le Firmware de la Galileo à l'aide de l'IDE Arduino
 Pour pouvoir interagir de façon plus poussée avec la carte Galileo (et l'utiliser autrement qu'en se contentant d'executer des sketchs) nous avons installé une distribution plus importante, contenant, entre autre, ssh. Pour cela nous avons eu recourt à la carte SD fournie et formaté en tant que bootable.
 
 Pour la formater correctement nous avons, sous windows exécuté diskpart.exe, lui demandant de créer une partition ''primary'' avec le label ''BOOTME'' sur notre carte SD.
@@ -47,35 +48,12 @@ Alors que, dans un premier temps, nous pouvions communiquer avec la carte par US
 
 Il est à noter que, hors des créneaux de TP, il était tout aussi simple de connecter la Galileo sur notre box qui se chargeait alors de lui donner une IP.
 
-
-
 #####Installation d'un client mosquitto sur Clanton :#####
 À cette étape, nous pouvions utiliser notre carte par ssh, mais nous voulions maintenant lui permettre d'émettre des publications mqtt. Pour cela nous avons décidé d'utiliser un publisher Mosquitto. Seulement, les distributions précompilés de mosquitto ne fonctionnaient pas tel quel sur Clanton. Nous avons donc voulu recompilé Mosquitto directement sur notre Clanton, ce qui nous a également obligé à compiler/installer la bibliothèque nécessaire (c-ares qui n'est pas fournie sur notre distribution Clanton).
-
-
 
 ##### Une carte qui communique l'état de ses capteurs :#####
 Une fois Mosquitto fonctionnel sur notre Galileo, nous avons voulu l'utiliser pour envoyer l'état des capteurs de la carte. Cependant, maintenant que nous utilisions Clanton, il n'était plus possible de pousser des sketchs à exécuter à l'aide de l'environnement de développement Arduino. Nous avons donc cherché un moyen d'exécuter des sketchs sur Clanton.
 Ne trouvant pas, nous avons donc décidé de se passer des sketchs et lire directement les valeurs des capteurs (ou leurs en envoyer). Pour cela, nous nous somme aidé d'un tutoriel trouvé sur le site [malinov.com](http://www.malinov.com/Home/sergey-s-blog/intelgalileo-programminggpiofromlinux) . Vu que nous pouvions récupérer les valeurs des capteurs avec des commandes linux, nous avons créé un script shell qui va, régulièrement, lire la valeur du capteur et la publier par mosquitto. Toujours dans l’optique de notre « détecteur d’incendie », nous avons simulé les capteurs température et fumée en envoyant des valeurs aléatoires (0 ou 1 pour la fumée et un entier entre 0 et 100 pour la température) par la suite nous considérerons ces envois comme les résultats de capteurs ordinaires.
-Communication avec la carte sous Clanton :
-
-Alors que, dans un premier temps, nous pouvions communiquer avec la carte par USB, opération facilité par l'environnement de développement Arduino. Cette opération est devenue impossible avec l'OS Clanton. Pour profiter de notre carte nous avons donc décidé d'utiliser ssh qui est fourni de base sur la distribution Clanton. Pour cela, il fallait pouvoir donner une adresse à notre carte. Nous avons donc décidé d'installer un serveur dhcp sur notre machine de travail pour qu'il puisse donner une adresse ip à celle-ci. Suite à cela il est devenu possible de se connecter à la carte en ssh.
-
-Il est à noter que, hors des créneaux de TP, il était tout aussi simple de connecter la Galileo sur notre box qui se chargeait alors de lui donner une IP.
-
-
-
-#####Installation d'un client mosquitto sur Clanton :#####
-À cette étape, nous pouvions utiliser notre carte par ssh, mais nous voulions maintenant lui permettre d'émettre des publications mqtt. Pour cela nous avons décidé d'utiliser un publisher Mosquitto. Seulement, les distributions précompilés de mosquitto ne fonctionnaient pas tel quel sur Clanton. Nous avons donc voulu recompilé Mosquitto directement sur notre Clanton, ce qui nous a également obligé à compiler/installer la bibliothèque nécessaire (c-ares qui n'est pas fournie sur notre distribution Clanton).
-
-
-
-#####Une carte qui communique l'état de ses capteurs :#####
-Une fois Mosquitto fonctionnel sur notre Galileo, nous avons voulu l'utiliser pour envoyer l'état des capteurs de la carte. Cependant, maintenant que nous utilisions Clanton, il n'était plus possible de pousser des sketchs à exécuter à l'aide de l'environnement de développement Arduino. Nous avons donc cherché un moyen d'exécuter des sketchs sur Clanton.
-Ne trouvant pas, nous avons donc décidé de se passer des sketchs et lire directement les valeurs des capteurs (ou leurs en envoyer). Pour cela, nous nous somme aidé d'un tutoriel trouvé sur le site malinov.com . Vu que nous pouvions récupérer les valeurs des capteurs avec des commandes linux, nous avons créé un script shell qui va, régulièrement, lire la valeur du capteur et la publier par mosquitto. Toujours dans l’optique de notre « détecteur d’incendie », nous avons simulé les capteurs température et fumée en envoyant des valeurs aléatoires (0 ou 1 pour la fumée et un entier entre 0 et 100 pour la température) par la suite nous considérerons ces envois comme les résultats de capteurs ordinaires.
-
-
-
 
 ###Sur notre machine Linux :###
 Nous avons décidé d'utiliser une de nos machines personnelles tournant sous Linux comme serveur pour notre infrastructure. 
@@ -149,3 +127,12 @@ Nous avons décidé de tout simplement aligner la température, un message oui/n
 
 
 ##Résumé##
+
+- Installation d'un OS plus complet sur la Galileo (cf : [tutoriel](http://air.imag.fr/index.php/SmartCampus2014/TutoGalileo#Installation_de_l.27OS_pr.C3.A9-build.C3.A9s), [distribution](http://ccc.ntu.edu.tw/index.php/en/news/40)
+- Installation d'un Client Mosquitto sur la carte(build de la [bibliothèque c-ares](http://c-ares.haxx.se/download/) -suivre le INSTALL fourni-, compilation de [mosquitto](http://mosquitto.org/download/))
+- Récupération des informations du capteurs à l'aide d'un script shell et publication par mosquitto (cf : [malinov.com](http://www.malinov.com/Home/sergey-s-blog/intelgalileo-programminggpiofromlinux)pour la lecture du capteur)
+- Préparation du serveur :
+  - Installation du serveur Mosquitto, de MongoDB et de Node-RED
+  - Configuration de Node-RED pour transmettre les informations MQTT à MongoDB
+  - Installation d'OpenHab
+  - Création des fichiers items, sitemap et rules pour OpenHab
