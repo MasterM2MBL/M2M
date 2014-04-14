@@ -131,9 +131,9 @@ Nous avons décidé de tout simplement aligner la température, un message oui/n
 
 ##Résumé##
 
-- Installation d'un OS plus complet sur la Galileo (cf : [tutoriel](http://air.imag.fr/index.php/SmartCampus2014/TutoGalileo#Installation_de_l.27OS_pr.C3.A9-build.C3.A9s), [distribution](http://ccc.ntu.edu.tw/index.php/en/news/40)
+- Installation d'un OS plus complet sur la Galileo (cf : [tutoriel](http://air.imag.fr/index.php/SmartCampus2014/TutoGalileo#Installation_de_l.27OS_pr.C3.A9-build.C3.A9s), [distribution](http://ccc.ntu.edu.tw/index.php/en/news/40))
 - Installation d'un Client Mosquitto sur la carte(build de la [bibliothèque c-ares](http://c-ares.haxx.se/download/) -suivre le INSTALL fourni-, compilation de [mosquitto](http://mosquitto.org/download/))
-- Récupération des informations du capteurs à l'aide d'un script shell et publication par mosquitto (cf : [malinov.com](http://www.malinov.com/Home/sergey-s-blog/intelgalileo-programminggpiofromlinux)pour la lecture du capteur)
+- Récupération des informations du capteurs à l'aide d'un script shell et publication par mosquitto (cf : [malinov.com](http://www.malinov.com/Home/sergey-s-blog/intelgalileo-programminggpiofromlinux) pour la lecture du capteur)
 - Préparation du serveur :
   - Installation du serveur Mosquitto, de MongoDB et de Node-RED
   - Configuration de Node-RED pour transmettre les informations MQTT à MongoDB
