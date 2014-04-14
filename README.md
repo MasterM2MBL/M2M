@@ -11,7 +11,7 @@ Ce projet réalisé dans le cadre de l’UE M2M nous a conduits à mettre en pla
 L’infrastructure implémentée est celle présenté ci-dessous :
 ![alt tag](https://raw.githubusercontent.com/MasterM2MBL/M2M/master/images/image001.jpg)
 
-Un résumé des étapes importantes est accessible ici.
+Un résumé des étapes importantes est accessible [ici](https://github.com/MasterM2MBL/M2M/blob/master/README.md#r%C3%A9sum%C3%A9).
 
 
 ##Mise en place :##
