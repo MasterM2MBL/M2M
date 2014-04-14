@@ -37,7 +37,7 @@ Pour pouvoir interagir de façon plus poussée avec la carte Galileo (et l'utili
 
 Pour la formater correctement nous avons, sous windows exécuté diskpart.exe, lui demandant de créer une partition ''primary'' avec le label ''BOOTME'' sur notre carte SD.
 
-Une fois la carte SD formatée, nous avons simplement décompressée la distribution choisie (Clanton, version "Yocto Project Linux image w/ Clanton-full kernel + general SDKs + Oracle JDK 8 + Tomcat" -voir ici-) sur celle-ci. 
+Une fois la carte SD formatée, nous avons simplement décompressée la distribution choisie (Clanton, version "Yocto Project Linux image w/ Clanton-full kernel + general SDKs + Oracle JDK 8 + Tomcat" -voir [ici](http://ccc.ntu.edu.tw/index.php/en/news/40)-) sur celle-ci. 
 À partir de maintenant, si la carte est insérée, la Galileo démarrera sous Clanton.
 
 
@@ -56,7 +56,7 @@ Il est à noter que, hors des créneaux de TP, il était tout aussi simple de co
 
 ##### Une carte qui communique l'état de ses capteurs :#####
 Une fois Mosquitto fonctionnel sur notre Galileo, nous avons voulu l'utiliser pour envoyer l'état des capteurs de la carte. Cependant, maintenant que nous utilisions Clanton, il n'était plus possible de pousser des sketchs à exécuter à l'aide de l'environnement de développement Arduino. Nous avons donc cherché un moyen d'exécuter des sketchs sur Clanton.
-Ne trouvant pas, nous avons donc décidé de se passer des sketchs et lire directement les valeurs des capteurs (ou leurs en envoyer). Pour cela, nous nous somme aidé d'un tutoriel trouvé sur le site malinov.com . Vu que nous pouvions récupérer les valeurs des capteurs avec des commandes linux, nous avons créé un script shell qui va, régulièrement, lire la valeur du capteur et la publier par mosquitto. Toujours dans l’optique de notre « détecteur d’incendie », nous avons simulé les capteurs température et fumée en envoyant des valeurs aléatoires (0 ou 1 pour la fumée et un entier entre 0 et 100 pour la température) par la suite nous considérerons ces envois comme les résultats de capteurs ordinaires.
+Ne trouvant pas, nous avons donc décidé de se passer des sketchs et lire directement les valeurs des capteurs (ou leurs en envoyer). Pour cela, nous nous somme aidé d'un tutoriel trouvé sur le site [malinov.com](http://www.malinov.com/Home/sergey-s-blog/intelgalileo-programminggpiofromlinux) . Vu que nous pouvions récupérer les valeurs des capteurs avec des commandes linux, nous avons créé un script shell qui va, régulièrement, lire la valeur du capteur et la publier par mosquitto. Toujours dans l’optique de notre « détecteur d’incendie », nous avons simulé les capteurs température et fumée en envoyant des valeurs aléatoires (0 ou 1 pour la fumée et un entier entre 0 et 100 pour la température) par la suite nous considérerons ces envois comme les résultats de capteurs ordinaires.
 Communication avec la carte sous Clanton :
 
 Alors que, dans un premier temps, nous pouvions communiquer avec la carte par USB, opération facilité par l'environnement de développement Arduino. Cette opération est devenue impossible avec l'OS Clanton. Pour profiter de notre carte nous avons donc décidé d'utiliser ssh qui est fourni de base sur la distribution Clanton. Pour cela, il fallait pouvoir donner une adresse à notre carte. Nous avons donc décidé d'installer un serveur dhcp sur notre machine de travail pour qu'il puisse donner une adresse ip à celle-ci. Suite à cela il est devenu possible de se connecter à la carte en ssh.
