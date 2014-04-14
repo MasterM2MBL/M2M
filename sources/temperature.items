@@ -1,0 +1,9 @@
+
+
+Number Temperature_Capteur 	"Temperature [%.1f °C]"	<temperature> { mqtt="<[mosquitto:temperature:state:default]" } 
+String Au_Feu "Incendie [%s]"
+Number Fumee_Capteur "[%d]" { mqtt="<[mosquitto:fumee:state:default]"}
+String Fumee	"Présence de fumée [%s]"
+Number Feu "Feu"	{mqtt=">[mosquitto:feu:state:*:default]" }
+Number Presence "[%d]" { mqtt="<[mosquitto:presence:state:default]" }
+String Quelquun "[%s]"

@@ -1,0 +1,10 @@
+sitemap galileo label="Bonjour"
+
+Frame label="Est ce que ça brule ?"{
+	Text item=Temperature_Capteur valuecolor=[>25="red",>15="orange",>5="green",<=5="blue"]
+	Text item=Fumee	valuecolor=["Oui"="red", "Non"="green"]
+	Text item=Au_Feu valuecolor=["Oui"="red", "Non"="green"]
+	Text item=Quelquun valuecolor=["Tout vas bien, pas d'incendie et personne pour manger les saucisses."=green, "Un nuisible est présent, combien de temps avant qu'il ne déclanche un feu ?"="yellow", "Au secours ! Ça brule et personne n'est là pour éteindre !"="orange", "Oh non ! Un incendie fait rage et quelqu'un va brûler !"="red"]
+	Frame label="Pensez à couper vos barbecues en partant." color="red"
+
+}

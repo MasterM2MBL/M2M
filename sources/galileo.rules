@@ -1,0 +1,87 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+
+
+rule "Debut"
+when 
+	System started
+then
+	postUpdate(Feu, 0)
+	postUpdate(Fumee, "Non")
+	postUpdate(Temperature_Capteur, 15)
+	postUpdate(Presence, 0)
+	postUpdate(Quelquun, "Tout vas bien, pas d'incendie et personne pour manger les saucisses.")
+end
+
+rule "Maj fumee"
+when
+	Item Fumee_Capteur changed
+then
+	if Fumee_Capteur.state == 1
+	{
+		postUpdate(Fumee, "Oui")
+	}
+	else
+	{
+		postUpdate(Fumee, "Non")
+	}
+end
+
+rule "Presence de feu"
+when
+	Item Temperature_Capteur changed or
+	Item Fumee_Capteur changed
+then	
+	if (Temperature_Capteur.state > 40)
+	{
+		if Fumee_Capteur.state == 1
+		{
+			postUpdate(Au_Feu, "Oui")
+			if Feu.state == 0
+			{
+				postUpdate(Feu, 1)
+			}
+		}
+		else
+		{ 
+			postUpdate(Au_Feu, "Non")
+			if Feu.state == 1
+			{ postUpdate(Feu, 0) }
+		 }
+	}else{
+		postUpdate(Au_Feu, "Non")
+		if Feu.state == 1
+		{ postUpdate(Feu, 0) }
+	}
+end
+
+rule "Maj Quelquun"
+when
+	Item Presence changed or 
+	Item Feu changed
+then
+	if Feu.state == 0
+	{
+		if Presence.state == 0 
+		{
+			postUpdate(Quelquun, "Tout vas bien, pas d'incendie et personne pour manger les saucisses.")
+		}
+		else
+		{
+			postUpdate(Quelquun, "Un nuisible est présent, combien de temps avant qu'il ne déclanche un feu ?")
+		}
+	}
+	else
+	{
+		if Presence.state == 0 
+		{
+			postUpdate(Quelquun, "Au secours ! Ça brule et personne n'est là pour éteindre !")
+		}
+		else
+		{
+			postUpdate(Quelquun, "Oh non ! Un incendie fait rage et quelqu'un va brûler !")
+		}
+	}
+end
+
