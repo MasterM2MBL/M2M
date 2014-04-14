@@ -111,3 +111,50 @@ Node-Red est un outil visuel basé sur NodeJS. Nous allons l'utiliser pour perme
 Une fois Node-Red lancé, on peut y acceder en entrant l'adresse "http://localhost:1880/". Nous avons branchés 4 entrées mqtt (temperature, fumee, feu, presence) vers mongodb en supprimant les champs ''qos'' et ''retain'' (uniquement dans un souci de lisibilité lorsque nous observions notre base) et ajouté un champ ''timestamp'' (en dehors du payload, toujours pour des raisons de lecture) afin que les données stockées soient réellement utilisables et que l'on puisse les classer dans le temps. 
 
 ![alt tag](https://raw.githubusercontent.com/MasterM2MBL/M2M/master/images/image002.png)
+
+
+
+#####Installation et configuration d'openHab :#####
+ 
+L'étape suivante est d'installer et configurer OpenHab pour observer l'état de notre installation.
+Pour l'installation et la configuration nous nous somme aidé du site officiel d'openHab (http://www.openhab.org/). Nous avons commencé par récupérer le "runtime core" et les addons.
+ 
+OpenHab doit nous permettre de 
+* récupérer et afficher la température
+* récupérer et afficher la présence ou non de fumée
+* Déduire de ces deux informations la présence d'un incendie et publier cette information
+* récupérer l'information du capteur de présence et afficher un message en fonction de celle-ci et de la présence ou non d'incendie
+ 
+OpenHab doit donc pouvoir récupérer émettre des informations sur le serveur Mosquitto. Pour cela nous avons ajouté les addons org.openhab.binding.mqtt-1.4.0.jar et org.openhab.persistence.mqtt-1.4.0.jar à notre installation. Puis nous avons modifié le fichier de configuration pour lui renseigner notre broker mqtt (mosquitto) avec l'ajout de la ligne ''mqtt:mosquitto.url=tcp://localhost:1883'' .
+
+Il nous faut ensuite définir les items qui seront utilisé par openHab. Nous en avons de trois type : 
+Les items reçus par openHab depuis Mosquitto (Temperature_Capteur, Fumee_Capteur, Presence) , les items envoyé par OpenHab à Mosquitto (Feu) et les items utiles à OpenHab en interne ou pour de l'affichage (Quelquun, Au_Feu, Fumee). Le fichier peut être récupéré ici. 
+
+On peut voir que pour souscrire, on utilisera un « mqtt="< » alors que pour publier on utilisera « mqtt="> ». 
+ 
+Il reste à calculer la présence d'un feu et préparer l'affichage.
+Pour les ''calculs'' et modifications, il faut se pencher sur le fichier galileo.rules
+ 
+Ce fichier contient des fonctions qui nous permettent de manipuler les items défini plus haut.
+
+Nous avons créé les fonctions Debut, Maj Fumee, Presence de feu, Maj Quelquun. 
+
+La fonction début nous permet d'initialiser certaines variables (le but est surtout d'avoir un affichage par défaut si aucune notification mqtt n'est encore parvenue).
+
+Maj Fumee permet de passer de la valeur 0/1 reçue par mqtt dans Fumee_Capteur à une chaine Oui/Non dans Fumee (l'on pourrait faire ce changement au moment de la reception mqtt, mais il est plus simple de manipuler des nombres que des chaines de caractères et l'on tient donc à garder la valeur 0/1 pour la suite).
+
+Presence de Feu, va définir si oui ou non il y a un incendie. L'idée est simple, si la temperature est supérieure à 40 degrès et qu'il y a de la fumée, alors il y a le feu. 
+
+On règle les deux variables, Au_Feu (chaine de caractère) et Feu (nombre 0/1). Ces deux variables existent pour les même raison que les variables Fumees. 
+
+Maj Quelquun prend en compte la présence ou non d'une personne, et l'existence ou non d'un incendie pour afficher une phrase d'information.
+ 
+ 
+Il ne nous reste maintenant plus qu'à afficher tout ça. Cela se passe dans galileo.sitemap.
+
+Le fichier sitemap permet de définir comment sont organisé et affichés les différentes informations. 
+
+Nous avons décidé de tout simplement aligner la température, un message oui/non pour la présence de fumée. Un message oui/non pour la présence d'un incendie et la phrase prévue par ''Maj Quelquun''. Quelques légères améliorations sont tout de même apportées à l'affichage brut. L'affichage de la température changera de valeur selon la valeur de celle-ci. Les non seront vert et les oui rouge. Et le message d'information aura une couleur différente selon sa ''gravité''. 
+ 
+ 
+##Résumé##
