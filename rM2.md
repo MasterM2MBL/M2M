@@ -54,6 +54,7 @@ Il est à noter que, hors des créneaux de TP, il était tout aussi simple de co
 ##### Une carte qui communique l'état de ses capteurs :#####
 Une fois Mosquitto fonctionnel sur notre Galileo, nous avons voulu l'utiliser pour envoyer l'état des capteurs de la carte. Cependant, maintenant que nous utilisions Clanton, il n'était plus possible de pousser des sketchs à exécuter à l'aide de l'environnement de développement Arduino. Nous avons donc cherché un moyen d'exécuter des sketchs sur Clanton.
 Ne trouvant pas, nous avons donc décidé de se passer des sketchs et lire directement les valeurs des capteurs (ou leurs en envoyer). Pour cela, nous nous somme aidé d'un tutoriel trouvé sur le site [malinov.com](http://www.malinov.com/Home/sergey-s-blog/intelgalileo-programminggpiofromlinux) . Vu que nous pouvions récupérer les valeurs des capteurs avec des commandes linux, nous avons créé un script shell qui va, régulièrement, lire la valeur du capteur et la publier par mosquitto. Toujours dans l’optique de notre « détecteur d’incendie », nous avons simulé les capteurs température et fumée en envoyant des valeurs aléatoires (0 ou 1 pour la fumée et un entier entre 0 et 100 pour la température) par la suite nous considérerons ces envois comme les résultats de capteurs ordinaires.
+Le script peut être trouvé [ici](https://github.com/MasterM2MBL/M2M/blob/master/sources/rec_val_capteur.sh)
 
 ###Sur notre machine Linux :###
 Nous avons décidé d'utiliser une de nos machines personnelles tournant sous Linux comme serveur pour notre infrastructure. 
@@ -81,10 +82,12 @@ Une fois Node-Red lancé, on peut y acceder en entrant l'adresse "[http://localh
 
 ![alt tag](https://raw.githubusercontent.com/MasterM2MBL/M2M/master/images/image002.png)
 
+La construction Node-RED peut être récupérée [là](https://github.com/MasterM2MBL/M2M/blob/master/sources/M2MNodeRed.json)
 
 
 
 #####Installation et configuration d'openHab :#####
+(Nous ne rentrerons pas en détail dans la configuration OpenHab, les besoins étant très basiques et de l'aide de très bonne qualité pouvant être trouvé facilement, sur le site officiel entre autre)
 L'étape suivante est d'installer et configurer OpenHab pour observer l'état de notre installation.
 Pour l'installation et la configuration nous nous somme aidé du site officiel d'openHab [http://www.openhab.org/](http://www.openhab.org/). Nous avons commencé par récupérer le "runtime core" et les addons.
 
@@ -94,15 +97,15 @@ OpenHab doit nous permettre de
 * Déduire de ces deux informations la présence d'un incendie et publier cette information
 * récupérer l'information du capteur de présence et afficher un message en fonction de celle-ci et de la présence ou non d'incendie
 
-OpenHab doit donc pouvoir récupérer émettre des informations sur le serveur Mosquitto. Pour cela nous avons ajouté les addons org.openhab.binding.mqtt-1.4.0.jar et org.openhab.persistence.mqtt-1.4.0.jar à notre installation. Puis nous avons modifié le fichier de configuration pour lui renseigner notre broker mqtt (mosquitto) avec l'ajout de la ligne "mqtt:mosquitto.url=tcp://localhost:1883" .
+OpenHab doit donc pouvoir récupérer émettre des informations sur le serveur Mosquitto. Pour cela nous avons ajouté les addons org.openhab.binding.mqtt-1.4.0.jar et org.openhab.persistence.mqtt-1.4.0.jar à notre installation. Puis nous avons modifié le fichier de [configuration](https://github.com/MasterM2MBL/M2M/blob/master/sources/openhab.cfg) pour lui renseigner notre broker mqtt (mosquitto) avec l'ajout de la ligne "mqtt:mosquitto.url=tcp://localhost:1883" .
 
 Il nous faut ensuite définir les items qui seront utilisé par openHab. Nous en avons de trois type : 
-Les items reçus par openHab depuis Mosquitto (Temperature_Capteur, Fumee_Capteur, Presence) , les items envoyé par OpenHab à Mosquitto (Feu) et les items utiles à OpenHab en interne ou pour de l'affichage (Quelquun, Au_Feu, Fumee). Le fichier peut être récupéré ici. 
+Les items reçus par openHab depuis Mosquitto (Temperature_Capteur, Fumee_Capteur, Presence) , les items envoyé par OpenHab à Mosquitto (Feu) et les items utiles à OpenHab en interne ou pour de l'affichage (Quelquun, Au_Feu, Fumee). Le fichier peut être récupéré [ici](https://github.com/MasterM2MBL/M2M/blob/master/sources/temperature.items). 
 
 On peut voir que pour souscrire, on utilisera un « mqtt="< » alors que pour publier on utilisera « mqtt="> ». 
 
 Il reste à calculer la présence d'un feu et préparer l'affichage.
-Pour les "calculs"' et modifications, il faut se pencher sur le fichier galileo.rules
+Pour les "calculs"' et modifications, il faut se pencher sur le fichier [galileo.rules](https://github.com/MasterM2MBL/M2M/blob/master/sources/galileo.rules)
 
 Ce fichier contient des fonctions qui nous permettent de manipuler les items défini plus haut.
 Nous avons créé les fonctions Debut, Maj Fumee, Presence de feu, Maj Quelquun. 
@@ -117,7 +120,7 @@ On règle les deux variables, Au_Feu (chaine de caractère) et Feu (nombre 0/1).
 
 Maj Quelquun prend en compte la présence ou non d'une personne, et l'existence ou non d'un incendie pour afficher une phrase d'information.
 
-Il ne nous reste maintenant plus qu'à afficher tout ça. Cela se passe dans galileo.sitemap.
+Il ne nous reste maintenant plus qu'à afficher tout ça. Cela se passe dans [galileo.sitemap](https://github.com/MasterM2MBL/M2M/blob/master/sources/galileo.sitemap).
 
 Le fichier sitemap permet de définir comment sont organisé et affichés les différentes informations. 
 
